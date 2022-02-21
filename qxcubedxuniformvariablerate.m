@@ -7,8 +7,10 @@ num=300;%number of elements in x range
 %range of x: [a,b]
 a=0;
 b=1;
+%samples of x
 delta=(b-a)/num;
 xval=[a+delta/2:delta:b-delta/2];
+%pmf of samples of x
 px=zeros(length(xval),1);
 fun=@(xv) 1/(b-a);
 for i=1:length(px)
@@ -41,8 +43,6 @@ for lambda=lambdaval%for each lambda
     end
     N=N+1;
     end
-    dval;%output the distortion values for each N
-    diffdv;%output fractional difference in distortion for each N
 end
 f=figure;
 plot(Hvar,dvar-lambdaval.*Hvar,'*-');
@@ -91,9 +91,9 @@ H=-(p)*log(p')/log(2);
 function [y]=decoder(x,xval,px)
 N=length(x)-1;
 y=zeros(1,N);
-for i=1:N%iterate over possible (alpha,beta) pairs
+for i=1:N%iterate over each region
     in1=find(x(i)==xval);
-    if in1~=1
+    if in1~=1%non-overlapping regions (]
         in1=in1+1;
     end
     in2=find(x(i+1)==xval);
@@ -103,9 +103,9 @@ end
 function endistortion=encoderdistortion(x,y,xval,px)
 N=length(y);
 endistortion=0;
-    for n=1:N
+    for n=1:N%iterate over each region
         in1=find(x(n)==xval);
-        if in1~=1
+        if in1~=1%non-overlapping regions (]
             in1=in1+1;
         end
         in2=find(x(n+1)==xval);
@@ -115,9 +115,9 @@ endistortion=0;
 function dedistortion=decoderdistortion(x,y,xval,px)
 N=length(y);
 dedistortion=0;
-for n=1:N
+for n=1:N%iterate over each region
     in1=find(x(n)==xval);
-    if in1~=1
+    if in1~=1%non-overlapping regions (]
         in1=in1+1;
     end
     in2=find(x(n+1)==xval);
